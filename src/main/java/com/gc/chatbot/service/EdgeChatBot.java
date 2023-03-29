@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 @Service
 @Data
 public class EdgeChatBot {
-    private static final String COOKIE_U = "_U=" + "1-6HG7R-YTKIzsrOexHI47QK-weIpmrQSotz3-T5mZ2KjIta0Q_uKYz20ocxxbL6_DxzKIkBL6lbTEDAww2Wtwlna_GgamKp8YAnm3C157ZbWt-JZoEiIUnwDQhUgKrxMIdi0YEqUNSiD-WerTgu6c_EStFf3v-sUgYx0EEae2s44gwgrDFhlGoIr5tHpJnlhirf79BJ8cgxfEF4vT2YUKQ";
+    private static final String COOKIE_U = "_U=" + "xxxxxx";
 
     private static final String DELIMITER = "\u001E";
 
