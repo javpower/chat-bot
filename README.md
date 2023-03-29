@@ -2,6 +2,9 @@
 
 #### 介绍
 springboot 集成openAi的ChatGpt,微软的新必应EdgeGpt,并附带聊天界面
+#### 体验地址
+http://43.159.43.198:8012/edge/
+http://43.159.43.198:8012/index/
 
 #### 使用说明
 
