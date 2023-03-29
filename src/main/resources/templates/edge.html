@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.min.js"></script>
+    <title>Edge助手</title>
+</head>
+<body style="margin:0;">
+    <div id="app">
+        <div class="chatRoot">
+            <div class="header">Edge助手</div>
+            <div class="content">
+                <div v-for="(item, index) in msgs" :key="index" class="round">
+                    <div class="send">
+                        <div class="bubble" v-if="item.send">{{ item.send }}</div>
+                    </div>
+                    <div class="back">
+                        <div class="bubble backBubble">
+                            <span v-if="item.loading">Loading...</span>
+                            <span v-else>{{ item.back }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <input type="text" v-model="text" @keyup.enter="sendText">
+                <button @click="sendText">发送</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const { createApp } = Vue
+        createApp({
+            data() {
+                return {
+                    msgs: [{
+                        id: "0",
+                        send: "",
+                        back: "欢迎使用Edge-Gpt助手!",
+                        loading: false,
+                    }],
+                    text: "",
+                }
+            },
+            methods: {
+                sendText() {
+                    if (!this.text) { return }
+                    var id = String(new Date().getTime())
+                    var msg = {
+                        id: id,
+                        send: this.text,
+                        back: "",
+                        loading: true,
+                    }
+                    this.msgs.push(msg)
+                    let formData = new FormData()
+                    formData.append('text', this.text)
+                    fetch('/ack', {
+                        method: "post",
+                        body: formData
+                    })
+                        .then((resp) => resp.text())
+                        .then(data => {
+                            for (const item of this.msgs) {
+                                if (item.id === id) {
+                                    item.loading = false
+                                    item.back = data
+                                }
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        })
+                    this.text = ''
+                },
+            }
+        }).mount('#app')
+    </script>
+</body>
+<style>
+    .chatRoot {
+        height: 100vh;
+        background-color: #f3f3f3;
+        display: flex;
+        flex-direction: column;
+        font-size: 1.1rem;
+    }
+    .header {
+        background-color: #eee;
+        color: #333;
+        padding: 10px;
+        box-shadow: 0 1px 2px #ddd;
+        text-align: center;
+        position: sticky;
+        top: 0;
+    }
+    .content {
+        height: 100%;
+        overflow-y: scroll;
+    }
+    .bubble {
+        display: inline-block;
+        background: #fff;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px;
+        max-width: 60%;
+        overflow-wrap: break-word;
+        text-align: left;
+    }
+    .send {
+        text-align: right;
+    }
+    .backBubble {
+        background-color: #5bf596;
+    }
+    .back {
+        text-align: left;
+    }
+    .footer {
+        display: flex;
+        position: sticky;
+        bottom: 0;
+        padding: 5px;
+        background-color: #eee;
+    }
+    input {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        font-size: 1.1rem;
+    }
+    button {
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        margin-left: 5px;
+    }
+</style>
+</html>
